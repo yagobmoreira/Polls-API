@@ -3,13 +3,13 @@ import { prisma } from "../../lib/prisma"
 import { z } from 'zod'
 
 export const createPoll = async (app: FastifyInstance) => {
-  app.post('/polls', async (req, res) => {
+  app.post('/polls', async (request, reply) => {
     const createPollBody = z.object({
       title: z.string(),
       options: z.array(z.string())
     })
     
-    const { title, options } = createPollBody.parse(req.body)
+    const { title, options } = createPollBody.parse(request.body)
     
     const poll = await prisma.poll.create({
       data: {
@@ -24,6 +24,6 @@ export const createPoll = async (app: FastifyInstance) => {
       }
     })
   
-    return res.status(201).send({ pollId: poll.id })
+    return reply.status(201).send({ pollId: poll.id })
   })
 }

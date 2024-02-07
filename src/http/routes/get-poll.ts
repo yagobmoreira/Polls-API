@@ -3,12 +3,12 @@ import { prisma } from "../../lib/prisma"
 import { z } from 'zod'
 
 export const getPoll = async (app: FastifyInstance) => {
-  app.get('/polls/:pollId', async (req, res) => {
+  app.get('/polls/:pollId', async (request, reply) => {
     const getPollParams = z.object({
       pollId: z.string().uuid()
     })
     
-    const { pollId } = getPollParams.parse(req.params)
+    const { pollId } = getPollParams.parse(request.params)
     
     const poll = await prisma.poll.findUnique({
       where: {
@@ -24,6 +24,6 @@ export const getPoll = async (app: FastifyInstance) => {
       }
     })
   
-    return res.status(200).send({ poll })
+    return reply.status(200).send({ poll })
   })
 }
